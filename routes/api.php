@@ -16,3 +16,10 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+//List ideas
+Route::get('ideas','IdeasController@index');
+//List single idea
+Route::get('ideas/{id}','IdeasController@show');
+//Create new idea
+Route::post('idea', 'IdeaController@store');
+
