@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Idea;
 use Illuminate\Http\Request;
+use App\Http\Resources\Idea as IdeaResource;
 
 class IdeaController extends Controller
 {
@@ -13,7 +15,10 @@ class IdeaController extends Controller
      */
     public function index()
     {
-        //
+        //Get Ideas
+        $ideas = Idea::orderBy('created_at','desc')->paginate(5);
+        //return collection of ideas
+        return IdeaResource::collection($ideas);
     }
 
     /**
@@ -29,29 +34,36 @@ class IdeaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $idea = $request->isMethod('put') ? Idea::findOrFail($request->id) : new Idea;
+        $idea->id = $request->input('id');
+        $idea->title = $request->input('title');
+        $idea->body = $request->input('body');
+        if($idea->save()){
+            return new IdeaResource($idea);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int $id
      */
     public function show($id)
     {
-        //
+        $idea = Idea::findOrFail($id);
+
+        return new IdeaResource($idea);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -62,8 +74,8 @@ class IdeaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -74,11 +86,16 @@ class IdeaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        $idea = Idea::findOrFail($id);
+
+        if($idea->delete()){
+            return new IdeaResource($idea);
+        }
+
     }
 }

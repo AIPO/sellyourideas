@@ -17,9 +17,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 //List ideas
-Route::get('ideas','IdeasController@index');
+Route::get('ideas','IdeaController@index');
 //List single idea
-Route::get('ideas/{id}','IdeasController@show');
+Route::get('idea/{id}','IdeaController@show');
 //Create new idea
 Route::post('idea', 'IdeaController@store');
+//Update idea
+Route::put('idea', 'IdeaController@store');
+//Delete idea
+Route::delete('idea/{id}','IdeaController@destroy');
 
