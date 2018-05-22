@@ -47323,6 +47323,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -47366,6 +47389,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 prev_page_url: links.prev
             };
             this.pagination = pagination;
+        },
+        deleteIdea: function deleteIdea(id) {
+            var _this2 = this;
+
+            if (confirm('are you sure?')) {
+                fetch('api/article/' + id, {
+                    method: 'delete'
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (data) {
+                    alert('Deleted');
+                    _this2.fetchIdeas();
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            }
         }
     }
 });
@@ -47381,18 +47420,163 @@ var render = function() {
   return _c(
     "div",
     [
+      _c(
+        "form",
+        {
+          staticClass: "md-3",
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              _vm.addIdea()
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "form-group" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.idea.title,
+                  expression: "idea.title"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text", placeholder: "Title" },
+              domProps: { value: _vm.idea.title },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.idea, "title", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.idea.body,
+                  expression: "idea.body"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { placeholder: "Your content goes here..." },
+              domProps: { value: _vm.idea.body },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.idea, "body", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-light btn-block",
+                attrs: { type: "submit" }
+              },
+              [_vm._v("Save")]
+            )
+          ])
+        ]
+      ),
+      _vm._v(" "),
       _c("h2", [_vm._v("Ideas")]),
       _vm._v(" "),
+      _c("nav", { attrs: { "aria-label": "Page navigation example" } }, [
+        _c("ul", { staticClass: "pagination" }, [
+          _c(
+            "li",
+            {
+              staticClass: "page-item",
+              class: [{ disabled: !_vm.pagination.prev_page_url }]
+            },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "page-link",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      _vm.fetchIdeas(_vm.pagination.prev_page_url)
+                    }
+                  }
+                },
+                [_vm._v("Previous")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("li", { staticClass: "page-item disabled" }, [
+            _c(
+              "a",
+              { staticClass: "page-link text-dark", attrs: { href: "#" } },
+              [
+                _vm._v(
+                  "Page " +
+                    _vm._s(_vm.pagination.current_page) +
+                    " of\n                    " +
+                    _vm._s(_vm.pagination.last_page)
+                )
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "li",
+            {
+              staticClass: "page-item",
+              class: [{ disabled: !_vm.pagination.next_page_url }]
+            },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "page-link",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      _vm.fetchIdeas(_vm.pagination.next_page_url)
+                    }
+                  }
+                },
+                [_vm._v("Next")]
+              )
+            ]
+          )
+        ])
+      ]),
+      _vm._v(" "),
       _vm._l(_vm.ideas, function(idea) {
-        return _c(
-          "div",
-          _vm._b({ staticClass: "card card-body mb-2" }, "div", idea.id, false),
-          [
-            _c("h3", [_vm._v(_vm._s(idea.title))]),
-            _vm._v(" "),
-            _c("p", [_vm._v(_vm._s(idea.body))])
-          ]
-        )
+        return _c("div", { key: idea.id, staticClass: "card card-body mb-2" }, [
+          _c("h3", [_vm._v(_vm._s(idea.title))]),
+          _vm._v(" "),
+          _c("p", [_vm._v(_vm._s(idea.body))]),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-danger",
+              on: {
+                click: function($event) {
+                  _vm.deleteIdea(idea.id)
+                }
+              }
+            },
+            [_vm._v("Delete")]
+          )
+        ])
       })
     ],
     2
