@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2>Ideas</h2>
-        <div class="card card-body mb-2" v-for="idea in ideas" v-bind="idea.id">
+        <div class="card card-body mb-2" v-for="idea in ideas" v-bind:key="idea.id">
             <h3>{{idea.title}}</h3>
             <p>{{idea.body}}</p>
         </div>
