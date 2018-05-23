@@ -1,6 +1,6 @@
 <template>
     <div>
-        <form @submit.prevent="addIdea()"class="md-3">
+        <form @submit.prevent="addIdea" class="md-3">
             <div class="form-group">
                 <input type="text" class="form-control" placeholder="Title" v-model="idea.title">
                 <textarea class="form-control" placeholder="Your content goes here..." v-model="idea.body"></textarea>
@@ -26,6 +26,7 @@
             <h3>{{idea.title}}</h3>
             <p>{{idea.body}}</p>
             <hr>
+            <button @click="editIdea(idea)" class="btn btn-warning">Edit</button>
             <button @click="deleteIdea(idea.id)" class="btn btn-danger">Delete</button>
         </div>
     </div>
@@ -73,16 +74,60 @@
                 },
                 deleteIdea(id) {
                     if (confirm('are you sure?')) {
-                        fetch(`api/article/${id}`, {
+                        fetch(`api/idea/${id}`, {
                             method: 'delete'
                         })
                             .then(res => res.json())
                             .then(data => {
                                 alert('Deleted');
-                                this.fetchIdeas()
+                                this.fetchIdeas();
                             })
                             .catch(err => console.log(err));
                     }
+                },
+                addIdea() {
+                    if (this.edit === false) {
+                        //add
+                        fetch('api/idea', {
+                            method: 'post',
+                            body: JSON.stringify(this.idea),
+                            headers: {
+                                'content-type': 'application/json',
+                            }
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                this.idea.title = '';
+                                this.idea.body = '';
+                                alert('Idea added');
+                                this.fetchIdeas();
+                            })
+                            .catch(err => console.log(err));
+                    } else {
+                        fetch('api/idea', {
+                            method: 'put',
+                            body: JSON.stringify(this.idea),
+                            headers: {
+                                'content-type': 'application/json',
+                            }
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                this.idea.title = '';
+                                this.idea.body = '';
+                                alert('Idea updated');
+                                this.fetchIdeas();
+                            })
+                            .catch(err => console.log(err));
+
+                    }
+                },
+                editIdea(idea){
+                   this.edit =true;
+                   this.idea.id =idea.id;
+                   this.idea.idea_id= idea.id;
+                   this.idea.title = idea.title;
+                   this.idea.body = idea.body;
                 }
             }
     };

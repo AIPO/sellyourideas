@@ -47346,6 +47346,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -47394,7 +47395,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             if (confirm('are you sure?')) {
-                fetch('api/article/' + id, {
+                fetch('api/idea/' + id, {
                     method: 'delete'
                 }).then(function (res) {
                     return res.json();
@@ -47405,6 +47406,53 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     return console.log(err);
                 });
             }
+        },
+        addIdea: function addIdea() {
+            var _this3 = this;
+
+            if (this.edit === false) {
+                //add
+                fetch('api/idea', {
+                    method: 'post',
+                    body: JSON.stringify(this.idea),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (data) {
+                    _this3.idea.title = '';
+                    _this3.idea.body = '';
+                    alert('Idea added');
+                    _this3.fetchIdeas();
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            } else {
+                fetch('api/idea', {
+                    method: 'put',
+                    body: JSON.stringify(this.idea),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (data) {
+                    _this3.idea.title = '';
+                    _this3.idea.body = '';
+                    alert('Idea updated');
+                    _this3.fetchIdeas();
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            }
+        },
+        editIdea: function editIdea(idea) {
+            this.edit = true;
+            this.idea.id = idea.id;
+            this.idea.idea_id = idea.id;
+            this.idea.title = idea.title;
+            this.idea.body = idea.body;
         }
     }
 });
@@ -47427,7 +47475,7 @@ var render = function() {
           on: {
             submit: function($event) {
               $event.preventDefault()
-              _vm.addIdea()
+              return _vm.addIdea($event)
             }
           }
         },
@@ -47563,6 +47611,19 @@ var render = function() {
           _c("p", [_vm._v(_vm._s(idea.body))]),
           _vm._v(" "),
           _c("hr"),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-warning",
+              on: {
+                click: function($event) {
+                  _vm.editIdea(idea)
+                }
+              }
+            },
+            [_vm._v("Edit")]
+          ),
           _vm._v(" "),
           _c(
             "button",
